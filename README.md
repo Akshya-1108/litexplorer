@@ -98,3 +98,9 @@ All backend config via environment variables (or `.env`):
 | `CHUNK_OVERLAP`    | `100`                      | Overlap between chunks       |
 | `RETRIEVAL_K`      | `4`                        | Chunks retrieved per query   |
 | `MAX_SUMMARY_CHUNKS`| `6`                       | Max chunks used in summary   |
+
+## Preview
+Below is the preview of this project 
+
+![Summarizer UI](./Screenshot%202026-04-05%20194341.png)
+![Chat Interface](./Screenshot%202026-04-05%20194849.png)
