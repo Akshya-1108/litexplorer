@@ -102,5 +102,5 @@ All backend config via environment variables (or `.env`):
 ## Preview
 Below is the preview of this project 
 
-![Summarizer UI](images/Screenshot%2026-04-05%194341.png)
+![Summarizer UI](images/Screenshot%202026-04-05%20194341.png)
 ![Chat Interface](images/Screenshot%202026-04-05%20194849.png)
