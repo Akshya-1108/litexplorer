@@ -1,17 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-sage: #A3B18A;
-  --color-sage-muted: #A3B18A26;
-  --color-brand: #0057FF;
-  --color-brand-hover: #0047D4;
-  --color-brand-muted: #0057FF26;
-  --color-surface: #111318;
-  --color-surface-border: #1E2028;
-  --color-page: #0C0E11;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #9CA3AF;
-  --color-text-muted: #6B7280;
+  /* ── Color Palette ─────────────────────────────────────── */
+  --color-page: #1E2021;
+  --color-surface: #282828;
+  --color-surface-border: #32302F;
+  --color-brown: #362E24;
+  --color-light-brown: #6A6156;
+  --color-dark-beige: #777068;
+  --color-beige: #CFBFAD;
+  --color-ivory: #EFE7DF;
+  --color-brand: #D9542C;
+  --color-brand-hover: #C04A27;
+  --color-brand-muted: #D9542C26;
+  --color-accent: #7F986D;
+  --color-accent-muted: #7F986D26;
+  --color-mint: #65878E;
+  --color-purple: #8A94BE;
+  --color-text-primary: #EFE7DF;
+  --color-text-secondary: #CFBFAD;
+  --color-text-muted: #777068;
 }
 
 @layer base {
@@ -25,20 +33,20 @@
   }
 
   body {
-    background-color: #0C0E11;
-    color: #9CA3AF;
+    background-color: #1E2021;
+    color: #CFBFAD;
   }
 
   ::selection {
-    background-color: #A3B18A;
-    color: #0C0E11;
+    background-color: #7F986D;
+    color: #1E2021;
   }
 
   /* Scrollbar */
   ::-webkit-scrollbar        { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  { background: #1E2028; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #2D3748; }
+  ::-webkit-scrollbar-thumb  { background: #32302F; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6A6156; }
 }
 
 @layer utilities {
@@ -56,5 +64,13 @@
   }
   .animate-blink {
     animation: blink 1s step-end infinite;
+  }
+
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0);     }
+  }
+  .animate-slide-in {
+    animation: slide-in-left 0.3s ease-out both;
   }
 }

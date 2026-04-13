@@ -19,7 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const base =
-    'relative inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0057FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0E11] disabled:cursor-not-allowed disabled:opacity-50 select-none';
+    'relative inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9542C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1E2021] disabled:cursor-not-allowed disabled:opacity-50 select-none';
 
   const sizes = {
     sm: 'px-3 py-1.5 text-xs gap-1.5',
@@ -29,18 +29,18 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary: [
-      'bg-[#0057FF] text-white',
-      'shadow-md shadow-[#0057FF]/20',
-      'hover:bg-[#0047D4] hover:shadow-lg hover:shadow-[#0057FF]/30',
-      'active:bg-[#003DB8]',
+      'bg-[#D9542C] text-[#EFE7DF]',
+      'shadow-md shadow-[#D9542C]/20',
+      'hover:bg-[#C04A27] hover:shadow-lg hover:shadow-[#D9542C]/30',
+      'active:bg-[#A83D1E]',
     ].join(' '),
     secondary: [
-      'bg-transparent text-white border border-[#1E2028]',
-      'hover:bg-[#111318] hover:border-[#374151]',
+      'bg-transparent text-[#EFE7DF] border border-[#32302F]',
+      'hover:bg-[#282828] hover:border-[#6A6156]',
     ].join(' '),
     ghost: [
-      'bg-transparent text-[#6B7280]',
-      'hover:text-[#0057FF] hover:bg-[#0057FF]/10',
+      'bg-transparent text-[#777068]',
+      'hover:text-[#D9542C] hover:bg-[#D9542C]/10',
     ].join(' '),
     danger: [
       'bg-transparent text-red-400 border border-red-900/50',
@@ -57,7 +57,7 @@ export const Button: React.FC<ButtonProps> = ({
       {isLoading ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
-          <span>Processing…</span>
+          <span>Processing&hellip;</span>
         </>
       ) : (
         <>

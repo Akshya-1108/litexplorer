@@ -1,184 +1,205 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
-  FileText, Cpu, Server, Database, Code2, Layers,
-  ArrowRight, Search, MessageSquare, Zap, ShieldCheck,
+  FileText, Cpu, Database, Layers,
+  ArrowRight, Search, Radio, ShieldCheck,
 } from 'lucide-react';
 
-/* ── Data ─────────────────────────────────────────────────────────── */
+/* ── Animation Variants ───────────────────────────────────────── */
 
-const PIPELINE_STEPS = [
-  { icon: FileText,     label: 'PDF Upload',      desc: 'Raw document ingested'       },
-  { icon: Layers,       label: 'Text Chunking',    desc: '800-char overlapping chunks' },
-  { icon: Cpu,          label: 'Embed Chunks',     desc: 'nomic-embed-text via Ollama' },
-  { icon: Database,     label: 'FAISS Index',      desc: 'Stored in-memory per session'},
-  { icon: Search,       label: 'Query Retrieval',  desc: 'Top-k similarity search'     },
-  { icon: MessageSquare,label: 'LLM Synthesis',    desc: 'llama3 grounded answer'      },
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: 'easeOut' },
+  },
+};
+
+/* ── Data ─────────────────────────────────────────────────────── */
+
+const BENTO_CARDS = [
+  {
+    icon: Layers,
+    title: 'RAG Pipeline',
+    desc: 'Complete retrieval-augmented generation system — from PDF ingestion through vector embedding to grounded LLM answers with top-k similarity retrieval.',
+    span: 2,
+  },
+  {
+    icon: Database,
+    title: 'FAISS Vector Store',
+    desc: 'In-memory similarity search powered by Facebook AI Similarity Search for fast chunk retrieval.',
+    span: 1,
+  },
+  {
+    icon: Cpu,
+    title: 'Ollama Integration',
+    desc: 'Local LLM inference with llama3 — zero data egress, complete privacy.',
+    span: 1,
+  },
+  {
+    icon: FileText,
+    title: 'PDF Processing',
+    desc: '800-char overlapping chunks with PyPDF extraction for optimal retrieval quality.',
+    span: 1,
+  },
+  {
+    icon: Radio,
+    title: 'SSE Streaming',
+    desc: 'Real-time Server-Sent Events deliver tokens to the UI as they are generated.',
+    span: 1,
+  },
 ];
 
-const FRONTEND_STACK = [
-  { icon: Code2,  name: 'React 19 + Vite 6',  desc: 'Fast SPA with hot-reload dev server'            },
-  { icon: Layers, name: 'Tailwind CSS v4',     desc: 'Utility-first styling with dark design system'  },
+const FOCUS_ITEMS = [
+  { title: 'Deep Paper Analysis',    desc: 'Ask complex questions about any research document' },
+  { title: 'Structured Summaries',   desc: 'AI-generated academic paper summaries with key findings' },
+  { title: 'Complete Privacy',        desc: 'All processing stays on your machine — no cloud dependencies' },
 ];
 
-const BACKEND_STACK = [
-  { icon: Server,   name: 'FastAPI 0.111',         desc: 'Async Python API with SSE streaming'           },
-  { icon: Database, name: 'FAISS (CPU)',            desc: 'In-memory vector similarity search'            },
-  { icon: Cpu,      name: 'Ollama (llama3)',        desc: 'Locally running LLM — zero data egress'        },
-  { icon: Zap,      name: 'nomic-embed-text',       desc: 'High-quality local embeddings model'           },
+const VALUES = [
+  {
+    num: '01',
+    title: 'Privacy by Design',
+    desc: 'Every computation happens locally. No cloud API keys, no telemetry, no external requests. Your documents never leave your network.',
+  },
+  {
+    num: '02',
+    title: 'Research-Grade Quality',
+    desc: 'Built with academic workflows in mind — from intelligent chunking strategies to context-aware synthesis of research findings.',
+  },
 ];
 
-const LIMITATIONS = [
-  'In-memory session store — resets on server restart.',
-  'Summariser uses first 6 chunks only for speed; very long papers may lose later content.',
-  'Single-user per session — no multi-tenant isolation yet.',
-  'Only PDF input is supported; other formats (DOCX, HTML) are not yet handled.',
-];
+/* ── Bento Card ───────────────────────────────────────────────── */
 
-/* ── Components ──────────────────────────────────────────────────── */
-
-const SectionLabel: React.FC<{ children: React.ReactNode; color?: string }> = ({
-  children,
-  color = 'bg-[#0057FF]',
-}) => (
-  <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-    <span className={`w-8 h-1 ${color} rounded-full`} />
-    {children}
-  </h3>
-);
-
-const StackCard: React.FC<{
+const BentoCard: React.FC<{
   icon: React.ElementType;
-  name: string;
+  title: string;
   desc: string;
-}> = ({ icon: Icon, name, desc }) => (
-  <div className="flex items-start gap-4 p-5 bg-[#111318] border border-[#1E2028] rounded-xl hover:border-[#A3B18A]/30 transition-colors group">
-    <div className="bg-[#0C0E11] group-hover:bg-[#A3B18A]/10 p-3 rounded-lg transition-colors flex-shrink-0">
-      <Icon className="w-5 h-5 text-[#A3B18A]" />
+}> = ({ icon: Icon, title, desc }) => (
+  <motion.div
+    variants={fadeUp}
+    whileHover={{ borderColor: '#777068' }}
+    transition={{ duration: 0.2 }}
+    className="bg-[#282828] border border-[#32302F] p-6 lg:p-8 cursor-default group hover:bg-[#32302F] transition-colors duration-200"
+  >
+    <div className="bg-[#1E2021] border border-[#32302F] p-3 rounded-lg w-fit mb-5 group-hover:border-[#7F986D]/40 transition-colors">
+      <Icon className="w-5 h-5 text-[#7F986D]" />
     </div>
-    <div>
-      <p className="text-gray-100 font-semibold text-sm">{name}</p>
-      <p className="text-[#6B7280] text-xs mt-0.5 leading-relaxed">{desc}</p>
-    </div>
-  </div>
+    <h3 className="text-[#EFE7DF] font-bold text-sm font-mono tracking-wide mb-2">{title}</h3>
+    <p className="text-[#777068] text-xs leading-relaxed">{desc}</p>
+  </motion.div>
 );
 
-/* ── Page ─────────────────────────────────────────────────────────── */
+/* ── Page ─────────────────────────────────────────────────────── */
 
 const AboutPage: React.FC = () => (
-  <div className="max-w-5xl mx-auto pb-16 animate-fade-in">
-
-    {/* Hero */}
-    <div className="text-center pt-10 mb-16">
-      <p className="font-mono text-xs text-[#A3B18A] mb-4 tracking-[0.2em]">
-        litexplorer &gt;=1.0.0;
+  <motion.div
+    className="max-w-5xl mx-auto pb-16"
+    variants={stagger}
+    initial="hidden"
+    animate="visible"
+  >
+    {/* ── Hero ────────────────────────────────────────────── */}
+    <motion.div variants={fadeUp} className="pt-6 sm:pt-10 mb-16 sm:mb-20">
+      <p className="font-mono text-xs text-[#777068] mb-6 tracking-wider">
+        pragma &gt;=1.0.0 &lt;2.0.0;
       </p>
-      <span className="inline-block py-1 px-3 rounded-lg bg-[#0057FF]/10 border border-[#0057FF]/20 text-[#0057FF] text-xs font-bold tracking-widest uppercase mb-5 font-mono">
-        Research Prototype · v1.0
-      </span>
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white mb-5">
-        AI-Powered{' '}
-        <span className="text-[#A3B18A]">
-          Literature Explorer
-        </span>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#EFE7DF] font-mono leading-[1.1] mb-2">
+        We Research
       </h1>
-      <p className="max-w-2xl mx-auto text-[#9CA3AF] text-lg leading-relaxed">
-        A local-first research assistant that uses Retrieval-Augmented Generation to help
-        you understand, summarise, and query academic papers — with no data leaving your machine.
+      <div className="flex items-center gap-3 my-3">
+        <div className="w-5 h-8 bg-[#7F986D]" />
+      </div>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#EFE7DF] font-mono leading-[1.1]">
+        Like Nobody Else
+      </h1>
+      <p className="max-w-xl text-[#777068] text-sm leading-relaxed mt-8">
+        Bringing top-tier research expertise in distributed systems and AI research
+        to support the most ambitious academic projects
       </p>
-    </div>
+      <a
+        href="#/literature-review"
+        className="inline-flex items-center gap-2 mt-8 px-6 py-3 border border-[#D9542C] text-[#D9542C] font-mono text-sm rounded-full hover:bg-[#D9542C]/10 transition-all duration-200 group"
+      >
+        <span>[R]esearch</span>
+        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+      </a>
+    </motion.div>
 
-    {/* Mission + Privacy */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-      <div className="bg-[#111318] border border-[#1E2028] p-8 rounded-xl hover:border-[#A3B18A]/20 transition-colors">
-        <h2 className="text-xl font-bold text-white mb-3">The Mission</h2>
-        <p className="text-[#9CA3AF] leading-relaxed text-sm">
-          Modern research means swimming through hundreds of PDFs. LitExplorer lets you
-          drop in any paper and immediately start asking questions or get a structured
-          summary — powered entirely by local models so your data stays private.
-        </p>
+    {/* ── Architecture — Bento Grid ───────────────────────── */}
+    <motion.div variants={fadeUp} className="mb-16 sm:mb-20">
+      <div className="flex items-center gap-3 mb-8">
+        <span className="w-8 h-[2px] bg-[#D9542C]" />
+        <h2 className="text-[#EFE7DF] font-bold font-mono text-sm tracking-wider uppercase">
+          Architecture
+        </h2>
       </div>
-      <div className="relative bg-[#111318] border border-[#1E2028] p-8 rounded-xl overflow-hidden">
-        <ShieldCheck className="absolute -right-3 -bottom-3 w-24 h-24 text-[#A3B18A]/8" />
-        <h2 className="text-xl font-bold text-white mb-3">Privacy by Design</h2>
-        <p className="text-[#9CA3AF] leading-relaxed text-sm">
-          Every inference call — embeddings and generation — goes to a local Ollama
-          instance. No cloud API keys, no telemetry, no external requests. Your documents
-          never leave your network.
-        </p>
-      </div>
-    </div>
-
-    {/* RAG Pipeline Diagram */}
-    <div className="mb-16">
-      <SectionLabel>How the RAG Pipeline Works</SectionLabel>
-      <div className="bg-[#111318] border border-[#1E2028] rounded-xl p-8">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {PIPELINE_STEPS.map((step, i) => (
-            <React.Fragment key={i}>
-              <div className="flex flex-col items-center gap-2 w-28 text-center">
-                <div className="bg-[#0C0E11] border border-[#1E2028] p-3 rounded-lg">
-                  <step.icon className="w-5 h-5 text-[#A3B18A]" />
-                </div>
-                <p className="text-gray-200 font-semibold text-xs leading-tight">{step.label}</p>
-                <p className="text-[#6B7280] text-[10px] leading-tight">{step.desc}</p>
-              </div>
-              {i < PIPELINE_STEPS.length - 1 && (
-                <ArrowRight className="w-4 h-4 text-[#374151] flex-shrink-0 hidden sm:block" />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-[#1E2028] grid grid-cols-1 sm:grid-cols-3 gap-4 text-center text-xs text-[#6B7280]">
-          <div>
-            <p className="text-gray-200 font-semibold text-sm mb-1">Chunk Size</p>
-            800 chars with 100-char overlap
-          </div>
-          <div>
-            <p className="text-gray-200 font-semibold text-sm mb-1">Retrieval</p>
-            Top-4 chunks by cosine similarity
-          </div>
-          <div>
-            <p className="text-gray-200 font-semibold text-sm mb-1">Summariser</p>
-            Parallel chunk summaries → final synthesis
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* Tech Stack */}
-    <div className="mb-16 space-y-10">
-      <div>
-        <SectionLabel>Frontend</SectionLabel>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {FRONTEND_STACK.map((item, i) => (
-            <StackCard key={i} {...item} />
-          ))}
-        </div>
-      </div>
-      <div>
-        <SectionLabel>Backend & AI</SectionLabel>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {BACKEND_STACK.map((item, i) => (
-            <StackCard key={i} {...item} />
-          ))}
-        </div>
-      </div>
-    </div>
-
-    {/* Known Limitations */}
-    <div>
-      <SectionLabel color="bg-yellow-500">Known Limitations</SectionLabel>
-      <div className="bg-[#111318] border border-[#1E2028] rounded-xl p-6 space-y-3">
-        {LIMITATIONS.map((lim, i) => (
-          <div key={i} className="flex items-start gap-3 text-sm text-[#9CA3AF]">
-            <span className="w-1.5 h-1.5 bg-yellow-500/60 rounded-full flex-shrink-0 mt-1.5" />
-            {lim}
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-[#32302F]"
+        variants={stagger}
+      >
+        {BENTO_CARDS.map((card, i) => (
+          <div key={i} className={card.span === 2 ? 'md:col-span-2' : ''}>
+            <BentoCard icon={card.icon} title={card.title} desc={card.desc} />
           </div>
         ))}
+      </motion.div>
+    </motion.div>
+
+    {/* ── Research Focus ──────────────────────────────────── */}
+    <motion.div variants={fadeUp} className="mb-16 sm:mb-20">
+      <div className="flex items-center gap-3 mb-8">
+        <span className="w-8 h-[2px] bg-[#7F986D]" />
+        <h2 className="text-[#EFE7DF] font-bold font-mono text-sm tracking-wider uppercase">
+          Research Focus
+        </h2>
       </div>
-    </div>
-  </div>
+      <motion.div className="space-y-6" variants={stagger}>
+        {FOCUS_ITEMS.map((item, i) => (
+          <motion.div
+            key={i}
+            variants={fadeUp}
+            className="flex items-start gap-4 group"
+          >
+            <span className="text-[#D9542C] font-mono text-lg mt-0.5 flex-shrink-0">&rarr;</span>
+            <div>
+              <h3 className="text-[#EFE7DF] font-bold text-base mb-1">{item.title}</h3>
+              <p className="text-[#777068] text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </motion.div>
+
+    {/* ── Core Values ─────────────────────────────────────── */}
+    <motion.div variants={fadeUp}>
+      <div className="flex items-center gap-3 mb-8">
+        <span className="w-8 h-[2px] bg-[#65878E]" />
+        <h2 className="text-[#EFE7DF] font-bold font-mono text-sm tracking-wider uppercase">
+          Core Values
+        </h2>
+      </div>
+      <motion.div className="space-y-8" variants={stagger}>
+        {VALUES.map((val) => (
+          <motion.div key={val.num} variants={fadeUp} className="flex gap-6 items-start">
+            <span className="text-[#D9542C] font-mono text-3xl font-bold leading-none flex-shrink-0 mt-1">
+              {val.num}
+            </span>
+            <div className="border-l border-[#32302F] pl-6">
+              <h3 className="text-[#EFE7DF] font-bold text-lg mb-2">{val.title}</h3>
+              <p className="text-[#777068] text-sm leading-relaxed max-w-lg">{val.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </motion.div>
+  </motion.div>
 );
 
 export default AboutPage;

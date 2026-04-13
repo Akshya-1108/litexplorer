@@ -41,25 +41,25 @@ export const DropZone: React.FC<DropZoneProps> = ({
         'relative flex flex-col items-center justify-center w-full h-52 rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer overflow-hidden group',
         disabled ? 'opacity-50 cursor-not-allowed' : '',
         dragging
-          ? 'border-[#0057FF] bg-[#0057FF]/10'
+          ? 'border-[#D9542C] bg-[#D9542C]/10'
           : file
-          ? 'border-[#A3B18A]/60 bg-[#A3B18A]/5'
-          : 'border-[#1E2028] hover:border-[#0057FF]/50 hover:bg-[#111318]/40',
+          ? 'border-[#7F986D]/60 bg-[#7F986D]/5'
+          : 'border-[#32302F] hover:border-[#D9542C]/50 hover:bg-[#282828]/40',
       ].join(' ')}
     >
       {dragging && (
-        <div className="absolute inset-0 bg-[#0057FF]/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-[#D9542C]/10 pointer-events-none" />
       )}
 
       {file ? (
         <div className="flex flex-col items-center gap-3 px-6 w-full z-10">
-          <div className="bg-[#A3B18A]/10 border border-[#A3B18A]/20 p-3 rounded-lg">
-            <FileText className="w-7 h-7 text-[#A3B18A]" />
+          <div className="bg-[#7F986D]/10 border border-[#7F986D]/20 p-3 rounded-lg">
+            <FileText className="w-7 h-7 text-[#7F986D]" />
           </div>
-          <p className="text-gray-200 font-semibold text-sm truncate w-full text-center px-4">
+          <p className="text-[#CFBFAD] font-semibold text-sm truncate w-full text-center px-4">
             {file.name}
           </p>
-          <p className="text-[#6B7280] text-xs">
+          <p className="text-[#777068] text-xs">
             {(file.size / 1024 / 1024).toFixed(2)} MB
           </p>
           <button
@@ -71,14 +71,14 @@ export const DropZone: React.FC<DropZoneProps> = ({
         </div>
       ) : (
         <div className="flex flex-col items-center gap-3 z-10">
-          <div className="bg-[#111318] border border-[#1E2028] group-hover:border-[#0057FF]/40 p-4 rounded-xl transition-colors">
-            <UploadCloud className="w-7 h-7 text-[#6B7280] group-hover:text-[#0057FF] transition-colors" />
+          <div className="bg-[#282828] border border-[#32302F] group-hover:border-[#D9542C]/40 p-4 rounded-xl transition-colors">
+            <UploadCloud className="w-7 h-7 text-[#777068] group-hover:text-[#D9542C] transition-colors" />
           </div>
           <div className="text-center">
-            <p className="text-gray-300 font-medium text-sm">
-              Drop PDF here or <span className="text-[#0057FF]">browse</span>
+            <p className="text-[#CFBFAD] font-medium text-sm">
+              Drop PDF here or <span className="text-[#D9542C]">browse</span>
             </p>
-            <p className="text-[#6B7280] text-xs mt-1">Up to 50 MB</p>
+            <p className="text-[#777068] text-xs mt-1">Up to 50 MB</p>
           </div>
         </div>
       )}
