@@ -1,8 +1,0 @@
-{
-    "files.exclude": {
-        "transition: { duration: ..., ease: '...' }": true
-    },
-    "search.exclude": {
-        "transition: { duration: ..., ease: '...' }": true
-    }
-}
