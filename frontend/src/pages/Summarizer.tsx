@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Sparkles, AlertCircle, Copy, Check,
   FileText, BrainCircuit, PenTool,

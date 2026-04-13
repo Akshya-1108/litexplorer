@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import {
   FileText, Cpu, Database, Layers,
-  ArrowRight, Search, Radio, ShieldCheck,
+  ArrowRight, Radio,
 } from 'lucide-react';
 
 /* ── Animation Variants ───────────────────────────────────────── */
@@ -10,7 +10,7 @@ import {
 const stagger = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08 } },
-};
+}as const;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -19,7 +19,7 @@ const fadeUp = {
     y: 0,
     transition: { duration: 0.5, ease: 'easeOut' },
   },
-};
+} as const;
 
 /* ── Data ─────────────────────────────────────────────────────── */
 
@@ -85,7 +85,7 @@ const BentoCard: React.FC<{
   <motion.div
     variants={fadeUp}
     whileHover={{ borderColor: '#777068' }}
-    transition={{ duration: 0.2 }}
+    transition={{ duration: 0.2 } as const}
     className="bg-[#282828] border border-[#32302F] p-6 lg:p-8 cursor-default group hover:bg-[#32302F] transition-colors duration-200"
   >
     <div className="bg-[#1E2021] border border-[#32302F] p-3 rounded-lg w-fit mb-5 group-hover:border-[#7F986D]/40 transition-colors">
