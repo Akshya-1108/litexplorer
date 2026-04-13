@@ -19,7 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const base =
-    'relative inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 disabled:cursor-not-allowed disabled:opacity-50 overflow-hidden select-none';
+    'relative inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0057FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0E11] disabled:cursor-not-allowed disabled:opacity-50 select-none';
 
   const sizes = {
     sm: 'px-3 py-1.5 text-xs gap-1.5',
@@ -29,27 +29,22 @@ export const Button: React.FC<ButtonProps> = ({
 
   const variants = {
     primary: [
-      'bg-gradient-to-r from-indigo-600 to-purple-600 text-white',
-      'shadow-lg shadow-indigo-700/30',
-      'hover:from-indigo-500 hover:to-purple-500 hover:shadow-indigo-600/50 hover:shadow-xl',
-      'hover:scale-[1.02] active:scale-[0.98]',
-      // Glare overlay
-      'before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-b before:from-white/15 before:to-transparent before:pointer-events-none',
+      'bg-[#0057FF] text-white',
+      'shadow-md shadow-[#0057FF]/20',
+      'hover:bg-[#0047D4] hover:shadow-lg hover:shadow-[#0057FF]/30',
+      'active:bg-[#003DB8]',
     ].join(' '),
     secondary: [
-      'bg-gray-900 text-gray-200 border border-gray-700',
-      'hover:bg-gray-800 hover:border-indigo-500/50 hover:text-white',
-      'active:scale-[0.98]',
+      'bg-transparent text-white border border-[#1E2028]',
+      'hover:bg-[#111318] hover:border-[#374151]',
     ].join(' '),
     ghost: [
-      'bg-transparent text-gray-400',
-      'hover:text-indigo-400 hover:bg-indigo-500/10',
-      'active:scale-[0.98]',
+      'bg-transparent text-[#6B7280]',
+      'hover:text-[#0057FF] hover:bg-[#0057FF]/10',
     ].join(' '),
     danger: [
       'bg-transparent text-red-400 border border-red-900/50',
       'hover:bg-red-500/10 hover:text-red-300 hover:border-red-500/50',
-      'active:scale-[0.98]',
     ].join(' '),
   };
 

@@ -38,48 +38,47 @@ export const DropZone: React.FC<DropZoneProps> = ({
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
       className={[
-        'relative flex flex-col items-center justify-center w-full h-52 rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer overflow-hidden group',
+        'relative flex flex-col items-center justify-center w-full h-52 rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer overflow-hidden group',
         disabled ? 'opacity-50 cursor-not-allowed' : '',
         dragging
-          ? 'border-indigo-400 bg-indigo-500/10'
+          ? 'border-[#0057FF] bg-[#0057FF]/10'
           : file
-          ? 'border-indigo-500/60 bg-indigo-500/5'
-          : 'border-gray-700 hover:border-indigo-500/50 hover:bg-gray-800/40',
+          ? 'border-[#A3B18A]/60 bg-[#A3B18A]/5'
+          : 'border-[#1E2028] hover:border-[#0057FF]/50 hover:bg-[#111318]/40',
       ].join(' ')}
     >
-      {/* Subtle glow when dragging */}
       {dragging && (
-        <div className="absolute inset-0 bg-indigo-500/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-[#0057FF]/10 pointer-events-none" />
       )}
 
       {file ? (
         <div className="flex flex-col items-center gap-3 px-6 w-full z-10">
-          <div className="bg-indigo-500/10 border border-indigo-500/20 p-3 rounded-xl">
-            <FileText className="w-7 h-7 text-indigo-400" />
+          <div className="bg-[#A3B18A]/10 border border-[#A3B18A]/20 p-3 rounded-lg">
+            <FileText className="w-7 h-7 text-[#A3B18A]" />
           </div>
           <p className="text-gray-200 font-semibold text-sm truncate w-full text-center px-4">
             {file.name}
           </p>
-          <p className="text-gray-500 text-xs">
+          <p className="text-[#6B7280] text-xs">
             {(file.size / 1024 / 1024).toFixed(2)} MB
           </p>
           <button
             onClick={(e) => { e.stopPropagation(); onClear(); }}
-            className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-full transition-colors"
+            className="flex items-center gap-1 text-xs text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors"
           >
             <X size={11} /> Remove
           </button>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-3 z-10">
-          <div className="bg-gray-800 border border-gray-700 group-hover:border-indigo-500/40 p-4 rounded-2xl transition-colors">
-            <UploadCloud className="w-7 h-7 text-gray-400 group-hover:text-indigo-400 transition-colors" />
+          <div className="bg-[#111318] border border-[#1E2028] group-hover:border-[#0057FF]/40 p-4 rounded-xl transition-colors">
+            <UploadCloud className="w-7 h-7 text-[#6B7280] group-hover:text-[#0057FF] transition-colors" />
           </div>
           <div className="text-center">
             <p className="text-gray-300 font-medium text-sm">
-              Drop PDF here or <span className="text-indigo-400">browse</span>
+              Drop PDF here or <span className="text-[#0057FF]">browse</span>
             </p>
-            <p className="text-gray-600 text-xs mt-1">Up to 50 MB</p>
+            <p className="text-[#6B7280] text-xs mt-1">Up to 50 MB</p>
           </div>
         </div>
       )}
