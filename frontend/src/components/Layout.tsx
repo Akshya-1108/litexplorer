@@ -3,50 +3,49 @@ import { Outlet, NavLink } from 'react-router-dom';
 import { BookOpen, Layers, Info, Cpu, Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { to: '/literature-review', label: 'Literature Review', icon: BookOpen },
-  { to: '/summarizer',        label: 'Summarizer',        icon: Layers    },
-  { to: '/about',             label: 'About',             icon: Info      },
+  { to: '/literature-review', label: 'Literature Review', icon: BookOpen, idx: 0 },
+  { to: '/summarizer',        label: 'Summarizer',        icon: Layers,   idx: 1 },
+  { to: '/about',             label: 'About',             icon: Info,     idx: 2 },
 ];
 
 const Layout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#0C0E11] text-[#9CA3AF] flex flex-col font-sans">
 
       {/* ── Sticky Nav ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-gray-800/60 bg-gray-950/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-[#1E2028] bg-[#0C0E11]">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
 
           {/* Logo */}
           <div className="flex items-center gap-2.5 select-none">
-            <div className="relative p-2 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-700 shadow-lg shadow-indigo-700/40">
-              {/* Glare */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
-              <Cpu className="w-5 h-5 text-white relative z-10" />
+            <div className="p-2 rounded-lg bg-[#0057FF]">
+              <Cpu className="w-5 h-5 text-white" />
             </div>
             <span className="font-bold text-xl tracking-tight text-white">
-              Lit<span className="text-indigo-400">Explorer</span>
+              Lit<span className="text-[#A3B18A]">Explorer</span>
             </span>
           </div>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map(({ to, label, icon: Icon }) => (
+            {NAV_LINKS.map(({ to, label, icon: Icon, idx }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
                   [
-                    'flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
+                    'flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all duration-200',
                     isActive
-                      ? 'bg-indigo-500/15 text-indigo-300 ring-1 ring-indigo-500/30'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800',
+                      ? 'bg-[#0057FF]/10 text-[#A3B18A] border-b-2 border-[#A3B18A]'
+                      : 'text-[#6B7280] hover:text-white hover:bg-[#111318]',
                   ].join(' ')
                 }
               >
+                <span className="font-mono text-xs text-[#6B7280]">{`{${idx}}`}</span>
                 <Icon size={15} />
-                {label}
+                <span className="font-medium">{label}</span>
               </NavLink>
             ))}
           </div>
@@ -54,7 +53,7 @@ const Layout: React.FC = () => {
           {/* Mobile burger */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="md:hidden p-2 rounded-lg text-[#6B7280] hover:text-white hover:bg-[#111318] transition-colors"
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -62,21 +61,22 @@ const Layout: React.FC = () => {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-gray-800/60 bg-gray-950/95 px-4 py-3 flex flex-col gap-1">
-            {NAV_LINKS.map(({ to, label, icon: Icon }) => (
+          <div className="md:hidden border-t border-[#1E2028] bg-[#0C0E11] px-4 py-3 flex flex-col gap-1">
+            {NAV_LINKS.map(({ to, label, icon: Icon, idx }) => (
               <NavLink
                 key={to}
                 to={to}
                 onClick={() => setMobileOpen(false)}
                 className={({ isActive }) =>
                   [
-                    'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all',
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all',
                     isActive
-                      ? 'bg-indigo-500/15 text-indigo-300 border-l-2 border-indigo-500'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 border-l-2 border-transparent',
+                      ? 'bg-[#0057FF]/10 text-[#A3B18A] border-l-2 border-[#A3B18A]'
+                      : 'text-[#6B7280] hover:text-white hover:bg-[#111318] border-l-2 border-transparent',
                   ].join(' ')
                 }
               >
+                <span className="font-mono text-xs text-[#6B7280]">{`{${idx}}`}</span>
                 <Icon size={16} />
                 {label}
               </NavLink>
@@ -90,11 +90,20 @@ const Layout: React.FC = () => {
         className="flex-grow relative overflow-hidden"
         onClick={() => mobileOpen && setMobileOpen(false)}
       >
-        {/* Ambient background blobs */}
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute -top-40 left-1/4 w-[600px] h-[600px] bg-indigo-700/10 rounded-full blur-[120px]" />
-          <div className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-purple-700/10 rounded-full blur-[100px]" />
-          <div className="absolute bottom-0 left-1/2 w-[500px] h-[300px] bg-indigo-900/10 rounded-full blur-[80px]" />
+        {/* Geometric background — faded monospace numbers */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden select-none" aria-hidden="true">
+          <span className="absolute -top-10 left-[10%] text-[10rem] font-mono font-bold text-[#A3B18A] opacity-[0.03] leading-none">
+            2.5.1
+          </span>
+          <span className="absolute top-[30%] right-[5%] text-[8rem] font-mono font-bold text-[#A3B18A] opacity-[0.03] leading-none">
+            0.9.8
+          </span>
+          <span className="absolute bottom-[10%] left-[20%] text-[12rem] font-mono font-bold text-[#A3B18A] opacity-[0.02] leading-none">
+            6.1.9
+          </span>
+          <span className="absolute top-[60%] right-[30%] text-[6rem] font-mono font-bold text-[#A3B18A] opacity-[0.04] leading-none">
+            0.7.0
+          </span>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col h-full">
@@ -103,8 +112,8 @@ const Layout: React.FC = () => {
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────── */}
-      <footer className="border-t border-gray-800/50 py-5 mt-auto">
-        <p className="text-center text-gray-600 text-xs">
+      <footer className="border-t border-[#1E2028] py-5 mt-auto">
+        <p className="text-center text-[#6B7280] text-xs font-mono">
           © {new Date().getFullYear()} LitExplorer AI — Local RAG Research Assistant
         </p>
       </footer>

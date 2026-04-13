@@ -12,6 +12,63 @@ import type { ChatMessage } from '../types';
 
 type Phase = 'upload' | 'chat';
 
+const SUGGESTED_PROMPTS = [
+  'What is the methodology used in this paper?',
+  'Summarize the key findings and results...',
+  'What are the main conclusions?',
+  'Explain the theoretical framework...',
+  'What gaps does this research address?',
+];
+
+/* ── Typewriter component for empty chat state ─────────────────── */
+function TypewriterPrompts() {
+  const [promptIdx, setPromptIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const currentPrompt = SUGGESTED_PROMPTS[promptIdx];
+
+    if (isPaused) {
+      const pauseTimer = setTimeout(() => {
+        setIsPaused(false);
+        setCharIdx(0);
+        setPromptIdx((prev) => (prev + 1) % SUGGESTED_PROMPTS.length);
+      }, 2000);
+      return () => clearTimeout(pauseTimer);
+    }
+
+    if (charIdx < currentPrompt.length) {
+      const typeTimer = setTimeout(() => {
+        setCharIdx((prev) => prev + 1);
+      }, 60);
+      return () => clearTimeout(typeTimer);
+    }
+
+    // Fully typed — pause before next
+    setIsPaused(true);
+  }, [charIdx, promptIdx, isPaused]);
+
+  const displayText = SUGGESTED_PROMPTS[promptIdx].slice(0, charIdx);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full gap-6 select-none">
+      <div className="p-4 bg-[#111318] border border-[#1E2028] rounded-xl">
+        <MessageSquare className="w-10 h-10 text-[#A3B18A]" />
+      </div>
+      <div className="text-center max-w-md">
+        <div className="font-mono text-[#A3B18A] text-lg h-8 flex items-center justify-center">
+          <span>{displayText}</span>
+          <span className="inline-block w-2.5 h-5 bg-[#A3B18A] ml-0.5 animate-blink" />
+        </div>
+        <p className="text-[#6B7280] text-sm mt-4">
+          Ask anything about your document
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function LiteratureReviewPage() {
   const [phase, setPhase]             = useState<Phase>('upload');
   const [file, setFile]               = useState<File | null>(null);
@@ -112,16 +169,19 @@ export default function LiteratureReviewPage() {
   if (phase === 'upload') {
     return (
       <div className="relative max-w-xl mx-auto mt-8 w-full">
-        <div className="relative bg-gray-900/60 border border-gray-800 backdrop-blur-xl p-8 rounded-3xl shadow-2xl overflow-hidden">
+        <div className="relative bg-[#111318] border border-[#1E2028] p-8 rounded-xl shadow-lg overflow-hidden">
           <LoaderOverlay isProcessing={processing} message="Indexing Document…" />
 
           {/* Header */}
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mb-4">
-              <BookOpen className="w-8 h-8 text-indigo-400" />
+            <p className="font-mono text-xs text-[#A3B18A] mb-3 tracking-wider">
+              litexplorer &gt;=1.0.0;
+            </p>
+            <div className="p-3 bg-[#A3B18A]/10 border border-[#A3B18A]/20 rounded-xl mb-4">
+              <BookOpen className="w-8 h-8 text-[#A3B18A]" />
             </div>
             <h1 className="text-2xl font-bold text-white">Literature Review</h1>
-            <p className="text-gray-400 mt-2 text-sm max-w-xs">
+            <p className="text-[#6B7280] mt-2 text-sm max-w-xs">
               Upload a research paper and ask questions about it.
             </p>
           </div>
@@ -134,7 +194,7 @@ export default function LiteratureReviewPage() {
           />
 
           {error && (
-            <div className="mt-4 flex items-start gap-2.5 p-3.5 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+            <div className="mt-4 flex items-start gap-2.5 p-3.5 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
               <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
@@ -160,14 +220,14 @@ export default function LiteratureReviewPage() {
     <div className="flex flex-col h-[calc(100vh-9rem)] max-w-4xl mx-auto w-full animate-fade-in">
 
       {/* Doc bar */}
-      <div className="flex items-center justify-between mb-3 px-4 py-3 bg-gray-900/60 border border-gray-800 rounded-2xl backdrop-blur-sm">
+      <div className="flex items-center justify-between mb-3 px-4 py-3 bg-[#111318] border border-[#1E2028] rounded-xl">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-lg flex-shrink-0">
-            <FileText className="w-4 h-4 text-indigo-400" />
+          <div className="p-2 bg-[#A3B18A]/10 border border-[#A3B18A]/20 rounded-lg flex-shrink-0">
+            <FileText className="w-4 h-4 text-[#A3B18A]" />
           </div>
           <div className="min-w-0">
             <p className="text-gray-200 font-semibold text-sm truncate">{file?.name}</p>
-            <p className="text-gray-500 text-xs">Active · Session ready</p>
+            <p className="text-[#6B7280] text-xs font-mono">Active · Session ready</p>
           </div>
         </div>
         <Button variant="ghost" size="sm" icon={<RotateCcw size={13} />} onClick={handleReset}>
@@ -177,33 +237,25 @@ export default function LiteratureReviewPage() {
 
       {/* Chat area */}
       <div className="flex-grow overflow-y-auto px-2 py-4 space-y-6 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-800">
-        {chatHistory.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full gap-3 opacity-40 select-none">
-            <MessageSquare className="w-12 h-12 text-gray-600" />
-            <p className="text-gray-400 font-medium">No questions yet</p>
-            <p className="text-gray-600 text-sm text-center max-w-xs">
-              Ask about methodology, findings, conclusions — anything in the paper.
-            </p>
-          </div>
-        )}
+        {chatHistory.length === 0 && <TypewriterPrompts />}
 
         {chatHistory.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div
               className={[
-                'max-w-[82%] rounded-2xl px-5 py-4 text-sm leading-relaxed shadow-lg',
+                'max-w-[82%] rounded-xl px-5 py-4 text-sm leading-relaxed shadow-lg',
                 msg.role === 'user'
-                  ? 'bg-indigo-600/80 text-white rounded-br-sm border border-indigo-500/40'
-                  : 'bg-gray-900/80 text-gray-200 border border-gray-700/60 rounded-bl-sm',
+                  ? 'bg-[#0057FF] text-white rounded-br-sm'
+                  : 'bg-[#111318] text-[#9CA3AF] border border-[#1E2028] rounded-bl-sm',
               ].join(' ')}
             >
               {msg.role === 'user' ? (
                 <p>{msg.text}</p>
               ) : (
-                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-headings:text-white prose-a:text-indigo-400 prose-strong:text-indigo-300">
+                <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-headings:text-[#A3B18A] prose-a:text-[#0057FF] prose-strong:text-[#A3B18A]">
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                   {msg.isStreaming && (
-                    <span className="inline-block w-1.5 h-4 bg-indigo-400 animate-pulse ml-0.5 rounded-sm align-middle" />
+                    <span className="inline-block w-2 h-4 bg-[#A3B18A] animate-blink ml-0.5 rounded-sm align-middle" />
                   )}
                 </div>
               )}
@@ -213,11 +265,11 @@ export default function LiteratureReviewPage() {
 
         {streaming && chatHistory[chatHistory.length - 1]?.role !== 'assistant' && (
           <div className="flex justify-start">
-            <div className="bg-gray-900/80 border border-gray-700/60 rounded-2xl rounded-bl-sm px-5 py-4 flex items-center gap-2">
+            <div className="bg-[#111318] border border-[#1E2028] rounded-xl rounded-bl-sm px-5 py-4 flex items-center gap-2">
               {[0, 150, 300].map((delay) => (
                 <div
                   key={delay}
-                  className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
+                  className="w-2 h-2 bg-[#A3B18A] rounded-full animate-bounce"
                   style={{ animationDelay: `${delay}ms` }}
                 />
               ))}
@@ -232,7 +284,7 @@ export default function LiteratureReviewPage() {
       <div className="pt-3">
         <form
           onSubmit={handleAsk}
-          className="flex items-center gap-3 bg-gray-900/80 border border-gray-700/60 backdrop-blur-md rounded-2xl px-4 py-3 shadow-xl focus-within:border-indigo-500/40 transition-colors"
+          className="flex items-center gap-3 bg-[#111318] border border-[#1E2028] rounded-xl px-4 py-3 shadow-xl focus-within:border-[#0057FF]/40 transition-colors"
         >
           <input
             type="text"
@@ -241,13 +293,13 @@ export default function LiteratureReviewPage() {
             onKeyDown={handleKeyDown}
             placeholder="Ask a question about the document…"
             disabled={streaming}
-            className="flex-grow bg-transparent text-gray-200 placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
+            className="flex-grow bg-transparent text-gray-200 placeholder-[#6B7280] text-sm focus:outline-none disabled:opacity-50"
             autoFocus
           />
           <button
             type="submit"
             disabled={!question.trim() || streaming}
-            className="flex-shrink-0 p-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-800 disabled:text-gray-600 text-white rounded-xl transition-all duration-200 hover:scale-105 active:scale-95 disabled:scale-100"
+            className="flex-shrink-0 p-2 bg-[#0057FF] hover:bg-[#0047D4] disabled:bg-[#111318] disabled:text-[#6B7280] text-white rounded-lg transition-all duration-200"
           >
             <ArrowUp size={18} />
           </button>

@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-sage: #A3B18A;
+  --color-sage-muted: #A3B18A26;
+  --color-brand: #0057FF;
+  --color-brand-hover: #0047D4;
+  --color-brand-muted: #0057FF26;
+  --color-surface: #111318;
+  --color-surface-border: #1E2028;
+  --color-page: #0C0E11;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #9CA3AF;
+  --color-text-muted: #6B7280;
+}
+
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -11,20 +25,20 @@
   }
 
   body {
-    background-color: #030712; /* gray-950 */
-    color: #f1f5f9;
+    background-color: #0C0E11;
+    color: #9CA3AF;
   }
 
   ::selection {
-    background-color: #4f46e5;
-    color: white;
+    background-color: #A3B18A;
+    color: #0C0E11;
   }
 
   /* Scrollbar */
   ::-webkit-scrollbar        { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  { background: #1f2937; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #374151; }
+  ::-webkit-scrollbar-thumb  { background: #1E2028; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2D3748; }
 }
 
 @layer utilities {
@@ -34,5 +48,13 @@
   }
   .animate-fade-in {
     animation: fade-in 0.35s ease-out both;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+  }
+  .animate-blink {
+    animation: blink 1s step-end infinite;
   }
 }
