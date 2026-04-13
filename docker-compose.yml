@@ -1,0 +1,56 @@
+# ═══════════════════════════════════════════════════════════════
+#  LitExplorer AI — Docker Compose (Full Stack)
+# ═══════════════════════════════════════════════════════════════
+#
+#  Prerequisites:
+#    1. Ollama must be running on your host machine
+#       → ollama serve
+#       → ollama pull llama3
+#       → ollama pull nomic-embed-text
+#
+#  Quick start:
+#    docker compose up --build
+#
+#  Then open:  http://localhost:3000
+# ═══════════════════════════════════════════════════════════════
+
+services:
+
+  # ── FastAPI Backend ───────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: litexplorer-backend
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-nomic-embed-text}
+      - LLM_MODEL=${LLM_MODEL:-llama3}
+      - CHUNK_SIZE=${CHUNK_SIZE:-800}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-100}
+      - RETRIEVAL_K=${RETRIEVAL_K:-4}
+      - MAX_SUMMARY_CHUNKS=${MAX_SUMMARY_CHUNKS:-6}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ── Nginx + React Frontend ───────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: litexplorer-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_started
+    restart: unless-stopped
