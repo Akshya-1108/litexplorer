@@ -108,7 +108,7 @@ const AboutPage: React.FC = () => (
     {/* ── Hero ────────────────────────────────────────────── */}
     <motion.div variants={fadeUp} className="pt-6 sm:pt-10 mb-16 sm:mb-20">
       <p className="font-mono text-xs text-[#777068] mb-6 tracking-wider">
-        pragma &gt;=1.0.0 &lt;2.0.0;
+        Litexplorer &gt;=1.0.0 &lt;2.0.0;
       </p>
       <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#EFE7DF] font-mono leading-[1.1] mb-2">
         We Research
