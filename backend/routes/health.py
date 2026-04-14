@@ -1,6 +1,13 @@
+import os
+
 from fastapi import APIRouter
 from core.config import get_settings
 from models.schemas import HealthResponse
+
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama3")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-embed-text")
+
 
 router = APIRouter(tags=["health"])
 
