@@ -1,20 +1,26 @@
 # ═══════════════════════════════════════════════════════════════
-#  LitExplorer AI — Docker Compose (Full Stack)
-# ═══════════════════════════════════════════════════════════════
-#
-#  Prerequisites:
-#    1. Ollama must be running on your host machine
-#       → ollama serve
-#       → ollama pull llama3
-#       → ollama pull nomic-embed-text
-#
-#  Quick start:
-#    docker compose up --build
-#
-#  Then open:  http://localhost:3000
+#  LitExplorer AI — Docker Compose (Full Stack with Ollama)
 # ═══════════════════════════════════════════════════════════════
 
 services:
+
+  # ── Ollama Service ───────────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_storage:/root/.ollama
+    restart: unless-stopped
+    # If you have an NVIDIA GPU, uncomment the lines below:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
 
   # ── FastAPI Backend ───────────────────────────────────────────
   backend:
@@ -23,7 +29,8 @@ services:
       dockerfile: Dockerfile
     container_name: litexplorer-backend
     environment:
-      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      # CRITICAL: We changed this to 'http://ollama:11434' to talk to the container
+      - OLLAMA_BASE_URL=http://ollama:11434
       - EMBEDDING_MODEL=${EMBEDDING_MODEL:-nomic-embed-text}
       - LLM_MODEL=${LLM_MODEL:-llama3}
       - CHUNK_SIZE=${CHUNK_SIZE:-800}
@@ -33,14 +40,14 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+    depends_on:
+      - ollama
     healthcheck:
       test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   # ── Nginx + React Frontend ───────────────────────────────────
   frontend:
@@ -54,3 +61,7 @@ services:
       backend:
         condition: service_started
     restart: unless-stopped
+
+# ── Volumes ───────────────────────────────────────────────────
+volumes:
+  ollama_storage:
